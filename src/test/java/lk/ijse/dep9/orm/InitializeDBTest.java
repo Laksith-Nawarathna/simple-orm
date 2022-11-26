@@ -17,7 +17,11 @@ class InitializeDBTest {
     @Test
     void initialize() {
         assertDoesNotThrow(() -> {
-            InitializeDB.initialize("simple-orm");
+            InitializeDB.initialize("localhost",
+                    "3306",
+                    "simple-orm",
+                    "root",
+                    "3/0tril2NB",);
         });
         assertDoesNotThrow(() -> {
             DriverManager.
