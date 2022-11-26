@@ -1,5 +1,6 @@
 package lk.ijse.dep9.orm;
 
+import lk.ijse.dep9.orm.annotation.Id;
 import lk.ijse.dep9.orm.annotation.Table;
 
 import java.io.File;
@@ -87,7 +88,23 @@ public class InitializeDB {
         for (Field field : fields) {
             String name = field.getName();
             Class<?> dataType = field.getType();
-            field.getDeclaredAnnotation(Id.class);
+            Id primaryKey = field.getDeclaredAnnotation(Id.class);
+
+            if (!supportedTypes.containsKey(dataType))
+                throw new RuntimeException("We don't support " + dataType + " yet." );
+
+            ddlBuilder.append("`").append(name).append("`").append(" ")
+                    .append(supportedTypes.get(dataType));
+
+            ddlBuilder = (primaryKey != null) ? ddlBuilder.append(" PRIMARY KEY,"):ddlBuilder.append(",");
+        }
+
+        ddlBuilder.deleteCharAt(ddlBuilder.length() - 1).append(")");
+        try {
+            System.out.println(ddlBuilder);
+            connection.createStatement().execute(ddlBuilder.toString());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
