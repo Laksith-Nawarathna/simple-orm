@@ -3,13 +3,14 @@ package lk.ijse.dep9.orm;
 import lk.ijse.dep9.orm.annotation.Table;
 
 import java.io.File;
+import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.stream.Collectors;
 
 public class InitializeDB {
@@ -64,6 +65,29 @@ public class InitializeDB {
             } catch (ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
+        }
+    }
+
+    private static void createTable(Class<?> classObj, Connection connection) {
+        StringBuilder ddlBuilder = new StringBuilder();
+        HashMap<Class<?>, String> supportedTypes = new HashMap<>();
+        supportedTypes.put(String .class, "VARCHAR(256");
+        supportedTypes.put(int.class, "INT");
+        supportedTypes.put(Integer.class, "INT");
+        supportedTypes.put(double.class, "DOUBLE(10,2)");
+        supportedTypes.put(Double.class, "DOUBLE(10,2)");
+        supportedTypes.put(BigDecimal.class, "DECIMAL(10,2)");
+        supportedTypes.put(Date.class, "DATE");
+        supportedTypes.put(Time.class, "TIME");
+        supportedTypes.put(Timestamp.class, "DATETIME");
+
+        ddlBuilder.append("CREATE TABLE IF NOT EXISTS `")
+                .append(classObj.getSimpleName()).append("`(");
+        Field[] fields = classObj.getDeclaredFields();
+        for (Field field : fields) {
+            String name = field.getName();
+            Class<?> dataType = field.getType();
+            field.getDeclaredAnnotation(Id.class);
         }
     }
 
