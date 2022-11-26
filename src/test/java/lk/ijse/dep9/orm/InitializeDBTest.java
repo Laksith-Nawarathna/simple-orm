@@ -21,12 +21,12 @@ class InitializeDBTest {
                     "3306",
                     "simple-orm",
                     "root",
-                    "3/0tril2NB",);
+                    "3/0tril2NB", "lk.ijse.dep9.orm.entity");
         });
-        assertDoesNotThrow(() -> {
-            DriverManager.
-                    getConnection("jdbc:mysql://localhost:3306/simple_orm", "root", "3/0tril2NB")
-                    .close();
-        });
+//        assertDoesNotThrow(() -> {
+//            DriverManager.
+//                    getConnection("jdbc:mysql://localhost:3306/simple_orm", "root", "3/0tril2NB")
+//                    .close();
+//        });
     }
 }
